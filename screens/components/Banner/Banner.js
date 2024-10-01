@@ -9,21 +9,15 @@ import {
   TextInput,
   Alert,
   Image,
-  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 // icons
 import Fontisto from "@expo/vector-icons/Fontisto";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 // redux
 import { AddIntakeWater } from "../../../Features/WaterSlice/WaterSlice";
-import Notify from "../Notification/Notify";
-
 // notification
 import { useNotification } from "../NotificationProvider/NotificationProvider";
 import { sendPushNotification } from "../Notification/Notify";
-
 // redux
 import { useSelector, useDispatch } from "react-redux";
 
@@ -34,6 +28,8 @@ function Banner() {
   const dispatch = useDispatch();
   const { expoPushToken } = useNotification();
   const IntakeWater = useSelector((state) => state.counter.value);
+  const [intakeProgress, setIntakeProgress] = useState(0); // Track current intake
+  const [reminderInterval, setReminderInterval] = useState(null);
 
   useEffect(() => {
     const startBlinking = () => {
@@ -66,8 +62,8 @@ function Banner() {
             text: "OK",
             onPress: () => {
               handleSaveMl();
-              sendInitialNotification(); // Send initial notification
-              startReminderNotification(); // Start reminder notifications
+              sendInitialNotification();
+              startReminderNotification();
             },
           },
         ]
@@ -87,19 +83,34 @@ function Banner() {
   };
 
   const startReminderNotification = () => {
-    setInterval(async () => {
-      await sendPushNotification(
-        expoPushToken,
-        "Reminder",
-        "Time to drink water! Keep hydrated!"
-      );
-    // }, 30 * 60 * 1000); // Every 30 minutes
-    }, 3000); // Every 30 minutes
+    clearInterval(reminderInterval); // Clear any existing interval
+
+    const IntakeWater = setInterval(async () => {
+      // Send notifications as long as intakeProgress is greater than 0
+      if (IntakeWater > 0) {
+        return await sendPushNotification(
+          expoPushToken,
+          "Reminder",
+          "Time to drink water! Keep hydrated!"
+        );
+      } else {
+        return clearInterval(IntakeWater); // Stop the reminders if intakeProgress is 0
+      }
+    }, 3000); // Adjust this interval to your liking (3000 ms = 3 seconds)
+
+    setReminderInterval(IntakeWater);
   };
 
-  // add and save the water in ml fun
+  // Add and save the water in mL and update intake progress
   const handleSaveMl = () => {
-    dispatch(AddIntakeWater(waterGoal));
+    const amount = Number(waterGoal); // Convert input to a number
+    if (amount > 0) {
+      // Only update if the amount is valid
+      setIntakeProgress((prev) => prev + amount); // Update intake progress
+      dispatch(AddIntakeWater(amount)); // Dispatch the update
+    } else {
+      Alert.alert("Error", "Please enter a valid amount greater than 0.");
+    }
   };
 
   return (
@@ -110,7 +121,10 @@ function Banner() {
           {"  "}
           {new Date().toLocaleDateString()}
         </Text>
-        <Text style={styles.infoText}>2000 ml water (2 Glass)</Text>
+        <Text style={styles.infoText}>
+          {intakeProgress} ml water ({Math.floor(intakeProgress / 200) || 0}{" "}
+          Glass)
+        </Text>
         <Pressable
           android_ripple={{ color: "lightblue" }}
           onPress={() => setModalVisible(true)}
@@ -120,9 +134,6 @@ function Banner() {
             Add your goal
           </Text>
         </Pressable>
-        {/* notify start */}
-        {/* <Notify /> */}
-        {/* notify end */}
       </View>
       <View style={styles.rightSide}>
         <Animated.Image

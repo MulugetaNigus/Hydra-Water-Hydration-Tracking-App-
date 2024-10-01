@@ -5,21 +5,30 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import { useSelector } from "react-redux";
 
+// Dummy notification function - replace with your actual notification logic
+const showNotification = (message) => {
+  alert(message); // Simple alert for demonstration; replace with your notification component
+};
+
 const IntakeProgress = () => {
   const IntakeWater = useSelector((state) => state.counter.value);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Calculate the initial progress based on IntakeWater
-    // Assuming the target intake is 2000 ml
-    const targetIntake = IntakeWater; 
+    const targetIntake = IntakeWater;
     const initialProgress = Math.min((IntakeWater / targetIntake) * 100, 100);
     setProgress(initialProgress);
 
     const interval = setInterval(() => {
-      setProgress(prevProgress => Math.min(prevProgress - 5, 100)); // Increase progress by 5%, max 100%
+      setProgress((prevProgress) => {
+        if (prevProgress <= 0) {
+          clearInterval(interval); // Stop the interval if progress is 0 or less
+          showNotification("Congratulations! I did it!"); // Call the notification on achievement
+          return 0; // Ensure progress does not go negative
+        }
+        return Math.max(prevProgress - 5, 0); // Decrease progress by 5%, but not below 0%
+      });
     }, 3000); // 30 minutes in milliseconds
-  // }, 30 * 60 * 1000); // 30 minutes in milliseconds
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, [IntakeWater]);
@@ -32,7 +41,6 @@ const IntakeProgress = () => {
   return (
     <View style={styles.container}>
       <View style={styles.circleContainer}>
-        {/* Header section for labels */}
         <View style={styles.intakeprogress}>
           <Text style={styles.progressText}>
             <FontAwesome6 name="bars-progress" size={24} color="#3498db" />{" "}
@@ -41,7 +49,7 @@ const IntakeProgress = () => {
 
           <Text style={styles.targetText}>
             <Feather name="target" size={24} color="#3498db" />
-            Target: {IntakeWater} ml
+            Target: {isNaN(progress) ? "0" : progress} % 
           </Text>
         </View>
 
@@ -70,7 +78,9 @@ const IntakeProgress = () => {
         </Svg>
 
         <View style={styles.textContainer}>
-          <Text style={styles.label}>{`${Math.round(progress)}%`}</Text>
+          <Text style={styles.label}>{`${
+            isNaN(Math.round(progress)) ? 0 : Math.round(progress)
+          }%`}</Text>
         </View>
       </View>
     </View>

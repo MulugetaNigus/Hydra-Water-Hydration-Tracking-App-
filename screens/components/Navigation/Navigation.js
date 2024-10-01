@@ -123,7 +123,7 @@ const Navigation = () => {
             <Text style={styles.modalTitle}>Important Information !</Text>
             <Text style={styles.modalMessage}>
               Please do not close the app, as notifications may not be addressed
-              if you do. Pin the app !
+              if you do. Minimize the app !
             </Text>
             <TouchableOpacity
               style={styles.closeButton}
