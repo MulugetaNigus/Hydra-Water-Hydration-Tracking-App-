@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert,
   Image,
+  Button,
 } from "react-native";
 
 // icons
@@ -87,6 +88,7 @@ function Banner() {
         >
           <Text style={styles.addGoalButtonText}>Add your goal</Text>
         </Pressable>
+        {/* <Button title="send messsage" onPress={handleSendSMS} /> */}
         <Notify />
       </View>
       <View style={styles.rightSide}>
