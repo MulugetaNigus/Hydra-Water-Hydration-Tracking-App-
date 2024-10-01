@@ -12,8 +12,8 @@ import SignUp from "../screens/auth/SignUp";
 // icons here
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Main from "../components/Main/Main";
-import Setting from "../components/Setting/Setting";
+import Main from "../screens/components/Main/Main";
+import Setting from "../screens/components/Setting/Setting";
 
 // navigation components here
 const Stack = createStackNavigator();

@@ -55,11 +55,13 @@ function SignUp() {
       {/* logo here */}
       <View style={styles.logoContainer}>
         <Image
-          source={require("../assets/water-drop.png")}
+          source={require("../../assets/water-drop.png")}
           style={styles.logo}
         />
       </View>
-
+      <Text className="text-6xl text-blue-600 font-extrabold items-start justify-start mt-10 mb-5">
+        Hydra
+      </Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Username</Text>
         <TextInput
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   signTxt: {
-    fontSize: 21,
+    fontSize: 18,
     color: "white",
     fontWeight: "600",
   },

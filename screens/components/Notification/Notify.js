@@ -8,30 +8,32 @@ import Constants from "expo-constants";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
 
 // Send push notification
-async function sendPushNotification(expoPushToken) {
+export const sendPushNotification = async (expoPushToken, title, body) => {
   const message = {
     to: expoPushToken,
-    sound: "default",
-    title: "muller king",
-    body: "this is from muller king !",
-    data: { someData: "some mullers data here !" },
+    sound: "default", // Ensure sound is set
+    title: title,
+    body: body,
+    data: { someData: "some mullers data here!" },
   };
 
-  await fetch("https://exp.host/--/api/v2/push/send", {
+  // Send the notification
+  const response = await fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
       "Content-Type": "application/json",
     },
     body: JSON.stringify(message),
   });
+
+  return response;
 }
 
 // Handle registration error
@@ -43,7 +45,7 @@ function handleRegistrationError(errorMessage) {
 // Register for push notifications
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
+    await Notifications.setNotificationChannelAsync("default", {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
@@ -52,33 +54,24 @@ async function registerForPushNotificationsAsync() {
   }
 
   if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
-      );
+      handleRegistrationError("Permission not granted to get push token for push notification!");
       return;
     }
 
-    const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
+    const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
     if (!projectId) {
       handleRegistrationError("Project ID not found");
     }
 
     try {
-      const pushTokenString = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId,
-        })
-      ).data;
+      const pushTokenString = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
       console.log(pushTokenString);
       return pushTokenString;
     } catch (e) {
@@ -112,33 +105,24 @@ const Notify = () => {
 
     return () => {
       notificationListener.current &&
-        Notifications.removeNotificationSubscription(
-          notificationListener.current
-        );
+        Notifications.removeNotificationSubscription(notificationListener.current);
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
   return (
-    <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
-    >
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}>
       <Text>Your Expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
+        <Text>Title: {notification && notification.request.content.title} </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
+        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
       </View>
       <Button
         title="Press to Send Notification"
         onPress={async () => {
-          await sendPushNotification(expoPushToken);
+          await sendPushNotification(expoPushToken, "Test Notification", "This is a test notification with sound!");
         }}
       />
     </View>

@@ -17,15 +17,23 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // redux
-import { useDispatch } from "react-redux";
-import { AddIntakeWater } from "../../Features/WaterSlice/WaterSlice";
+import { AddIntakeWater } from "../../../Features/WaterSlice/WaterSlice";
 import Notify from "../Notification/Notify";
+
+// notification
+import { useNotification } from "../NotificationProvider/NotificationProvider";
+import { sendPushNotification } from "../Notification/Notify";
+
+// redux
+import { useSelector, useDispatch } from "react-redux";
 
 function Banner() {
   const [modalVisible, setModalVisible] = useState(false);
   const [waterGoal, setWaterGoal] = useState("");
   const opacity = useRef(new Animated.Value(1)).current;
   const dispatch = useDispatch();
+  const { expoPushToken } = useNotification();
+  const IntakeWater = useSelector((state) => state.counter.value);
 
   useEffect(() => {
     const startBlinking = () => {
@@ -47,29 +55,51 @@ function Banner() {
     startBlinking();
   }, [opacity]);
 
-  // add and save the water in ml fun
-  const handleSaveMl = () => {
-    dispatch(AddIntakeWater(waterGoal));
-    // AsyncStorage.setItem("water", JSON.stringify(waterGoal))
-    //   .then(() => {
-    //     setModalVisible(false);
-    //   })
-    //   .catch(() => {
-    //     Alert.alert("Alert", "Something went wrong, please try again !");
-    //   });
-  };
-
+  // Function to send initial notification and set interval for reminders
   const handleAddGoal = () => {
     if (waterGoal) {
       Alert.alert(
         "Success",
-        `Your daily water intake goal is set to ${waterGoal} ml!`,
-        [{ text: "OK", onPress: () => handleSaveMl() }]
+        `Your daily water intake goal is set to ${waterGoal} ml! Start your first step!`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              handleSaveMl();
+              sendInitialNotification(); // Send initial notification
+              startReminderNotification(); // Start reminder notifications
+            },
+          },
+        ]
       );
       setWaterGoal("");
     } else {
       Alert.alert("Error", "Please enter a valid water intake amount.");
     }
+  };
+
+  const sendInitialNotification = async () => {
+    await sendPushNotification(
+      expoPushToken,
+      "Goal Set!",
+      `Your water intake goal is ${waterGoal} ml.`
+    );
+  };
+
+  const startReminderNotification = () => {
+    setInterval(async () => {
+      await sendPushNotification(
+        expoPushToken,
+        "Reminder",
+        "Time to drink water! Keep hydrated!"
+      );
+    // }, 30 * 60 * 1000); // Every 30 minutes
+    }, 3000); // Every 30 minutes
+  };
+
+  // add and save the water in ml fun
+  const handleSaveMl = () => {
+    dispatch(AddIntakeWater(waterGoal));
   };
 
   return (
@@ -86,18 +116,17 @@ function Banner() {
           onPress={() => setModalVisible(true)}
           style={styles.addGoalButton}
         >
-          <Text style={styles.addGoalButtonText}>Add your goal</Text>
+          <Text style={styles.addGoalButtonText} className="font-normal">
+            Add your goal
+          </Text>
         </Pressable>
-        <View className="flex-1 items-center justify-center bg-white">
-          <Text className="text-3xl text-red-600">Your app!</Text>
-          <StatusBar style="auto" />
-        </View>
-        {/* <Button title="send messsage" onPress={handleSendSMS} /> */}
-        <Notify />
+        {/* notify start */}
+        {/* <Notify /> */}
+        {/* notify end */}
       </View>
       <View style={styles.rightSide}>
         <Animated.Image
-          source={require("../../assets/water-drop.png")}
+          source={require("../../../assets/water-drop.png")}
           style={[styles.image, { opacity }]}
           resizeMode="contain"
         />
@@ -114,7 +143,7 @@ function Banner() {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
               <Image
-                source={require("../../assets/water-drop.png")}
+                source={require("../../../assets/water-drop.png")}
                 style={{ width: 40, height: 40 }}
               />
               Water Intake Amount

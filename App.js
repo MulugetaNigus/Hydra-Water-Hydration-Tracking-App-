@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, SafeAreaView } from "react-native";
 import AppNavigator from "./Routes/Route";
+import { NotificationProvider } from "./screens/components/NotificationProvider/NotificationProvider";
 
 // redux toolkit
 import { Provider } from "react-redux";
@@ -11,7 +12,9 @@ const App = () => {
   return (
     // <View>
     <Provider store={store}>
-      <AppNavigator />
+      <NotificationProvider>
+        <AppNavigator />
+      </NotificationProvider>
     </Provider>
     // {/* // <Text>lsjdnf</Text> */}
     // {/* </View> */}
