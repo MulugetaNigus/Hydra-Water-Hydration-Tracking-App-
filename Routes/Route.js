@@ -5,8 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // componenets here
-import SignIn from "../auth/SignIn";
-import SignUp from "../auth/SignUp";
+import SignIn from "../screens/auth/SignIn";
+import SignUp from "../screens/auth/SignUp";
 // import Main
 
 // icons here

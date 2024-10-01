@@ -11,7 +11,7 @@ import {
   Image,
   Button,
 } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 // icons
 import Fontisto from "@expo/vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -88,6 +88,10 @@ function Banner() {
         >
           <Text style={styles.addGoalButtonText}>Add your goal</Text>
         </Pressable>
+        <View className="flex-1 items-center justify-center bg-white">
+          <Text className="text-3xl text-red-600">Your app!</Text>
+          <StatusBar style="auto" />
+        </View>
         {/* <Button title="send messsage" onPress={handleSendSMS} /> */}
         <Notify />
       </View>
