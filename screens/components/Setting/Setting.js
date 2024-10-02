@@ -12,7 +12,7 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import the icon library
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // navigation lib here
 import { useNavigation } from "@react-navigation/native";
@@ -25,7 +25,7 @@ function Setting() {
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
   const getUserusername = async () => {
@@ -67,9 +67,10 @@ function Setting() {
         <View>
           <View style={styles.profileSection}>
             <Image
-              source={{
-                uri: "https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?w=182&h=190&c=7&r=0&o=5&pid=1.7",
-              }}
+              // source={{
+              //   uri: "https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?w=182&h=190&c=7&r=0&o=5&pid=1.7",
+              // }}
+              source={require("../../../assets/water-drop.png")}
               style={styles.avatar}
             />
             <Text style={styles.username}>HI, {userusername}</Text>

@@ -96,7 +96,7 @@ function Banner() {
       } else {
         return clearInterval(IntakeWater);
       }
-    }, 1800000);
+    }, 120000);
 
     setReminderInterval(IntakeWater);
   };
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   infoText: {
     color: "grey",
     opacity: 0.9,
-    fontSize: 16,
+    fontSize: 14,
     marginVertical: 15,
     fontWeight: "400",
   },

@@ -26,7 +26,7 @@ const IntakeProgress = () => {
         }
         return Math.max(prevProgress - 5, 0);
       });
-    }, 1800000);
+    }, 120000);
 
     return () => clearInterval(interval);
   }, [IntakeWater]);
@@ -46,7 +46,7 @@ const IntakeProgress = () => {
           </Text>
 
           <Text style={styles.targetText}>
-            <Feather name="target" size={24} color="#3498db" />
+            {/* <Feather name="target" size={24} color="#3498db" /> */}
             Target: {isNaN(progress) ? "0" : progress} %
           </Text>
         </View>
