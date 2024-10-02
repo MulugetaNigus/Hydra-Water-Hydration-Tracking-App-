@@ -4,10 +4,8 @@ import Svg, { Circle } from "react-native-svg";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
 import { useSelector } from "react-redux";
-
-// Dummy notification function - replace with your actual notification logic
 const showNotification = (message) => {
-  alert(message); // Simple alert for demonstration; replace with your notification component
+  alert(message);
 };
 
 const IntakeProgress = () => {
@@ -22,16 +20,15 @@ const IntakeProgress = () => {
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress <= 0) {
-          clearInterval(interval); // Stop the interval if progress is 0 or less
-          showNotification("Congratulations! I did it!"); // Call the notification on achievement
-          return 0; // Ensure progress does not go negative
+          clearInterval(interval);
+          showNotification("Congratulations! I did it!");
+          return 0; 
         }
-        return Math.max(prevProgress - 5, 0); // Decrease progress by 5%, but not below 0%
+        return Math.max(prevProgress - 5, 0);
       });
-    }, 1800000); // Set interval to 30 minutes
-    // 30 minutes in milliseconds
+    }, 1800000);
 
-    return () => clearInterval(interval); // Cleanup on component unmount
+    return () => clearInterval(interval);
   }, [IntakeWater]);
 
   const radius = 100;

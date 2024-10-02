@@ -41,7 +41,7 @@ function SignUp() {
     // otherwise handle user login with async storage
     try {
       const user = { username, password };
-      console.log(user);
+      // console.log(user);
       await AsyncStorage.setItem("user", JSON.stringify(user));
       navigate.navigate("SignIn");
     } catch (error) {

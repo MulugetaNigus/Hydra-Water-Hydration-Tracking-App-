@@ -94,20 +94,19 @@ function Banner() {
           "Time to drink water! Keep hydrated!"
         );
       } else {
-        return clearInterval(IntakeWater); // Stop the reminders if intakeProgress is 0
+        return clearInterval(IntakeWater);
       }
-    }, 1800000); // Adjust this interval to your liking (3000 ms = 3 seconds)
+    }, 1800000);
 
     setReminderInterval(IntakeWater);
   };
 
-  // Add and save the water in mL and update intake progress
   const handleSaveMl = () => {
-    const amount = Number(waterGoal); // Convert input to a number
+    const amount = Number(waterGoal);
     if (amount > 0) {
       // Only update if the amount is valid
-      setIntakeProgress((prev) => prev + amount); // Update intake progress
-      dispatch(AddIntakeWater(amount)); // Dispatch the update
+      setIntakeProgress((prev) => prev + amount);
+      dispatch(AddIntakeWater(amount));
     } else {
       Alert.alert("Error", "Please enter a valid amount greater than 0.");
     }

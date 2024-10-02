@@ -48,6 +48,7 @@ function SignIn() {
       if (userObj.username === username) {
         if (userObj.password === password) {
           // if password and username is correct, navigate to the home screen
+          // console.log(user);
           navigate.navigate("Home");
         } else {
           // if password is incorrect, show an error message
