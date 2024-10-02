@@ -39,13 +39,6 @@ function Main() {
     console.log("Notification sent:", percentage.toFixed(2)); // Debug statement
   };
 
-  const handleFillCapacity = () => {
-    console.log("Filling capacity..."); // Debug statement
-    setCurrentUsage(initialCapacity);
-    sendNotification(); // Notify the user
-    Alert.alert("Your intake capacity has been updated!"); // Alert to confirm action
-  };
-
   // redux
   const theme = useSelector((state) => state.counter.theme);
 
@@ -64,9 +57,6 @@ function Main() {
               <SimpleLineIcons name="drop" size={30} color="grey" /> Keep
               Hydrate Yourself
             </Text>
-            <Pressable onPress={handleFillCapacity}>
-              <Text>Fill Intake Capacity</Text>
-            </Pressable>
           </View>
           {/* banner sections */}
           <Banner />

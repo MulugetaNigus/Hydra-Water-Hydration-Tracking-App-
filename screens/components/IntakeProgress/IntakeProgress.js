@@ -28,7 +28,8 @@ const IntakeProgress = () => {
         }
         return Math.max(prevProgress - 5, 0); // Decrease progress by 5%, but not below 0%
       });
-    }, 3000); // 30 minutes in milliseconds
+    }, 1800000); // Set interval to 30 minutes
+    // 30 minutes in milliseconds
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, [IntakeWater]);
@@ -49,7 +50,7 @@ const IntakeProgress = () => {
 
           <Text style={styles.targetText}>
             <Feather name="target" size={24} color="#3498db" />
-            Target: {isNaN(progress) ? "0" : progress} % 
+            Target: {isNaN(progress) ? "0" : progress} %
           </Text>
         </View>
 

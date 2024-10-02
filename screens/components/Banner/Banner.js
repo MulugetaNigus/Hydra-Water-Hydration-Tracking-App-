@@ -96,7 +96,7 @@ function Banner() {
       } else {
         return clearInterval(IntakeWater); // Stop the reminders if intakeProgress is 0
       }
-    }, 3000); // Adjust this interval to your liking (3000 ms = 3 seconds)
+    }, 1800000); // Adjust this interval to your liking (3000 ms = 3 seconds)
 
     setReminderInterval(IntakeWater);
   };
